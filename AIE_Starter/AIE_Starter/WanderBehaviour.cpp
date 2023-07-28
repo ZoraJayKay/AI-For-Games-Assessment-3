@@ -5,6 +5,9 @@
 #include "Agent.h"
 
 namespace AIForGames {
+	WanderBehaviour::WanderBehaviour() {};
+	WanderBehaviour::~WanderBehaviour() {};
+
 	// An Update function that...
 	void WanderBehaviour::Update(Agent* agent, float deltaTime) {
 		// If the Agent's PathAgent has navigated to the end of its path, pick another random node and go there.

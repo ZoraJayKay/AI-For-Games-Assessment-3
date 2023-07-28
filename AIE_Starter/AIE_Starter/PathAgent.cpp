@@ -1,7 +1,6 @@
 #include "PathAgent.h"
 #include "NodeMap.h"
 #include <cmath>
-#include "raylib.h"
 #include <iostream>
 
 namespace AIForGames {
@@ -123,15 +122,16 @@ namespace AIForGames {
 		m_currentIndex = 0;
 	};
 
-	void PathAgent::Draw() {
+	void PathAgent::Draw(Color colour) {
 		Color agentColour;
 
+		// Purple
 		agentColour.a = 255;
 		agentColour.r = 255;
 		agentColour.g = 0;
 		agentColour.b = 255;
 		
-		DrawCircle((int)m_position.x, (int)m_position.y, 8, agentColour);
+		DrawCircle((int)m_position.x, (int)m_position.y, 8, colour);
 	};
 
 	void PathAgent::SetAgentCurrentNode(Node* node) {

@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 //#include <vector>
 #include "Pathfinding.h"
+#include "raylib.h"
 
 namespace AIForGames {
 	class PathAgent
@@ -22,7 +23,7 @@ namespace AIForGames {
 		void SetSpeed(int spd);
 		void Update(float deltaTime);
 		void GoToNode(Node* node);
-		void Draw();
+		void Draw(Color colour);
 		glm::vec2 GetAgentPosition();
 		void SetAgentPosition(glm::vec2 pos);
 		void SetAgentCurrentNode(Node* node);

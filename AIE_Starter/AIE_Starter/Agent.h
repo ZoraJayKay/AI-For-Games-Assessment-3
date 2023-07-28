@@ -18,18 +18,22 @@ namespace AIForGames {
 		~Agent();
 
 		void Update(float deltaTime);
-		void Draw();
+		void Draw(Color colour);
 		void GoTo(glm::vec2 point);
 		void SetNode(Node* node);
 		void SetAgent(PathAgent agent);
 		std::vector<Node*> GetPath();
 		bool PathComplete();
 		NodeMap* GetMap();
+		Agent* GetTarget();
+		void SetTarget(Agent* target);
+		glm::vec2 GetPosition();		
 
 	private:
 		PathAgent m_pathAgent;
 		Behaviour* m_current;
 		NodeMap* m_nodeMap;
 		Color m_colour;
+		Agent* m_targetAgent;
 	};
 }

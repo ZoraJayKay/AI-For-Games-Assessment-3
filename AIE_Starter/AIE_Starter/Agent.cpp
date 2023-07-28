@@ -10,8 +10,6 @@ namespace AIForGames {
 	};
 
 	std::vector<Node*> Agent::GetPath() {
-		/*std::vector<Node*> path = m_pathAgent.GetPath();
-		return path;*/
 		return m_pathAgent.GetPath();
 	}
 
@@ -25,8 +23,8 @@ namespace AIForGames {
 		}
 	};
 
-	void Agent::Draw() {
-		m_pathAgent.Draw();
+	void Agent::Draw(Color colour) {
+		m_pathAgent.Draw(colour);
 	};
 
 	// A function that finds the nearest node to the given point and calculates a path to it.
@@ -59,4 +57,16 @@ namespace AIForGames {
 	NodeMap* Agent::GetMap() {
 		return m_nodeMap;
 	};
+
+	Agent* Agent::GetTarget() {
+		return m_targetAgent;
+	}
+
+	void Agent::SetTarget(Agent* agent) {
+		m_targetAgent = agent;
+	}
+
+	glm::vec2 Agent::GetPosition() {
+		return m_pathAgent.GetAgentPosition();
+	}
 }

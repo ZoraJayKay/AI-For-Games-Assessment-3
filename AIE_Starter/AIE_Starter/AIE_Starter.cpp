@@ -47,6 +47,7 @@ Creating a Pathing Agent
 #include "PathAgent.h"
 #include "GoToPointBehaviour.h"
 #include "WanderBehaviour.h"
+#include "FollowBehaviour.h"
 
 using namespace std;
 using namespace AIForGames;
@@ -56,7 +57,7 @@ int main(int argc, char* argv[])
 	// Initialization
 	//--------------------------------------------------------------------------------------
 	int screenWidth = 1200;
-	int screenHeight = 700;
+	int screenHeight = 900;
 
 	InitWindow(screenWidth, screenHeight, "Zora Jane Kerr: Artificial Intelligence for Games (Assessment 1 - Implement the A* Pathfinding Algorithm) AIE, 2023 (student year 1)");
 
@@ -69,7 +70,7 @@ int main(int argc, char* argv[])
 	
 	vector<string> asciiMap;
 
-	// 20x10 grid of chars denoting whether or not a cell is navigable (1) or impassable (0) /// ALTERNATE MAP
+	// 25x15 grid of chars denoting whether or not a cell is navigable (1) or impassable (0) /// ALTERNATE MAP
 	asciiMap.push_back("00000000000000000000");     // row 1
 	asciiMap.push_back("01011101110000111000");     // row 2
 	asciiMap.push_back("01010111011111101100");     // row 3
@@ -78,7 +79,12 @@ int main(int argc, char* argv[])
 	asciiMap.push_back("01000000100010011110");     // row 6
 	asciiMap.push_back("01111100001110010010");     // row 7
 	asciiMap.push_back("00000111111000010000");     // row 8
-	asciiMap.push_back("01110101001111111110");     // row 9
+	asciiMap.push_back("01111101001111111110");     // row 9
+	asciiMap.push_back("01000111001000101110");     // row 10
+	asciiMap.push_back("01000101001000101010");     // row 10
+	asciiMap.push_back("01111101111111100110");     // row 10
+	asciiMap.push_back("00101000100000100010");     // row 10
+	asciiMap.push_back("00111111100000111110");     // row 10
 	asciiMap.push_back("00000000000000000000");     // row 10
 
 	// Create a NodeMap class with a width, height and cell size, ie the spacing in pixels between consecutive squares in the grid. We’ll give it a function to initialize its data from the ASCII map declared above.
@@ -87,7 +93,7 @@ int main(int argc, char* argv[])
 	map->Initialise(asciiMap, AIForGames::sizeOfCell);
 
 	// Set the starting node for the A* search equal to the Node* in column index 1, row index 1 (in the ascii map)
-	Node* start = map->GetNode(3, 2);
+	Node* start = map->GetNode(1, 1);
 
 	// Create a new player agent behaviour with the existing node map and the 'point and click' behaviour
 	Agent player_behaviour(map, new GoToPointBehaviour());
@@ -96,14 +102,20 @@ int main(int argc, char* argv[])
 	player_behaviour.SetAgent(playerAgent);
 	player_behaviour.SetNode(start);
 	
-
+	// An agent for wandering the map randomly
 	Agent agent_behaviour_01(map, new WanderBehaviour());
 	PathAgent wanderingAgent;
 	wanderingAgent.SetSpeed(32);
 	agent_behaviour_01.SetAgent(wanderingAgent);
 	agent_behaviour_01.SetNode(map->GetRandomNode());
-	agent_behaviour_01.SetNode(map->GetNode(1,8));
 
+	// An agent for following the player
+	Agent agent_behaviour_02(map, new FollowBehaviour());
+	PathAgent followingAgent;
+	followingAgent.SetSpeed(48);
+	agent_behaviour_02.SetAgent(followingAgent);
+	agent_behaviour_02.SetTarget(&player_behaviour);
+	agent_behaviour_02.SetNode(map->GetRandomNode());
 
 	// Time at commencement of pathfinding
 	float time = (float)GetTime();
@@ -129,15 +141,22 @@ int main(int argc, char* argv[])
 
 		// Draw the nodes of the map
 		map->Draw();
+
 		// Draw a line that shows the current path of the PathAgent inside the Agent that is passed in
-		map->DrawPath(player_behaviour.GetPath(), BLUE);
-		map->DrawPath(agent_behaviour_01.GetPath(), GREEN);
+		map->DrawPath(player_behaviour.GetPath(), DARKPURPLE);
+		map->DrawPath(agent_behaviour_01.GetPath(), DARKGREEN);
+		map->DrawPath(agent_behaviour_02.GetPath(), DARKBLUE);
+
 		// Update the behaviour of the Agent that encapsulates the PathAgent
 		player_behaviour.Update(deltaTime);
 		agent_behaviour_01.Update(deltaTime);
+		agent_behaviour_02.Update(deltaTime);
+
 		// Draw the path of the PathAgent inside the Agent
-		player_behaviour.Draw();
-		agent_behaviour_01.Draw();
+		player_behaviour.Draw(PURPLE);
+		agent_behaviour_01.Draw(GREEN);
+		agent_behaviour_02.Draw(BLUE);
+
 		// Finish
 		EndDrawing();
 

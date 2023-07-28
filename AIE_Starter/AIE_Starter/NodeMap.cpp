@@ -349,19 +349,36 @@ namespace AIForGames {
 			return lhs->fScore < rhs->fScore;
 		};
 
+		// Empty path 
+		vector<Node*> path;
+
 		//	A* SEARCH FUNCTION -------------------------------------------------------------------------------
 		//	1	----------------------------------------------------------------------------------------------------
 #ifndef NDEBUG
 		cout << "Step 1: Check the starting and ending node positions for existence on the map." << endl;
-		startNode == nullptr || endNode == nullptr												// If this is true
-			? cout << "Error - start or end, or both, do not exist." << endl	// Do this (add functionality)
-			: cout << "Start and end both exist. Continue." << endl;			// Else do this (add functionality)
+#endif
+		if (startNode == nullptr || endNode == nullptr) {
+#ifndef NDEBUG
+			cout << "Error - start or end, or both, do not exist." << endl;
+#endif
+			// Return an empty path
+			return path;
+		}
 
-		startNode == endNode																		// If this is true
-			? cout << "Start and end are same - path is complete." << endl		// Do this (add functionality)
-			: cout << "Start node and end node are different. Continue.\n" << endl;	// Else do this (add functionality)
-		// I know this doesn't actually do anything with errors - I would implement something if it was core to the tutorial, but not this time
+		// 
+		else if (startNode == endNode) {
+#ifndef NDEBUG
+			cout << "Start and end are same - path is complete." << endl;
+#endif
+			// Return an empty path
+			return path;
+		}
 
+#ifndef NDEBUG
+		// 
+		else {
+			cout << "Start and end both exist, and are different. Continue." << endl;
+		}
 
 		//	2	----------------------------------------------------------------------------------------------------
 		cout << "Step 2: Initialise the starting node." << endl;
@@ -550,31 +567,23 @@ namespace AIForGames {
 		//	5	----------------------------------------------------------------------------------------------------
 		cout << "Step 5: Create a path in reverse from the end node to the start node." << endl;
 #endif
-		vector<Node*> path;
-
 		currentNode = endNode;
 		while (currentNode != nullptr) {
-			path.insert(path.begin(), currentNode);
+			path.insert(path.begin(), currentNode);	
 			currentNode = currentNode->previousNode;
 		}
-
-		/*if (currentNode->previousNode != nullptr) {
-			currentNode->previousNode = nullptr;
-		}	*/	
 
 #ifndef NDEBUG
 		cout << "A vector of Nodes (the 'path') has been created. Size: [" << path.size() << "] nodes." << endl;
 #endif
 
-		if (*path.begin() != startNode) {
-			path.clear();
+		// If the calculated path does not commence from the start node, wipe the path 
+			// >>>> There's an unsolved logic error somewhere within pathing calculation if multiple agents exist that can cause teleporting between 'current' nodes of the agents in the specific case where a navigable path between agents does not exist, which this resolves
+		if (!path.empty()) {
+			if (path.front() != startNode) {
+				path.clear();
+			}
 		}
-
-		//// If there's only one node in the path then no path is possible; make the path null before returning it.
-		//if (path.size() < 2) {
-		//	path.clear();
-		//	std::cout << "TRIGGERED THE THING" << std::endl;
-		//}
 
 		return path;
 	};
