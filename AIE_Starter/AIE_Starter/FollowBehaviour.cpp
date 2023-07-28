@@ -5,7 +5,7 @@ namespace AIForGames {
 	FollowBehaviour::FollowBehaviour() {};
 	FollowBehaviour::~FollowBehaviour() {};
 
-	void FollowBehaviour::Update(Agent* agent, float deltaTime) {
+	void FollowBehaviour::Update(Agent* agent, float deltaTime) {		
 		// Retrieve the target agent
 		Agent* target = agent->GetTarget();
 
@@ -14,10 +14,11 @@ namespace AIForGames {
 
 		// If the distance differs by more than one node, re-calculate the path
 		if (distance > AIForGames::sizeOfCell) {
+			// Print text
+			agent->SetStateText("Following");
+
 			lastTargetPosition = target->GetPosition();
 			agent->GoTo(lastTargetPosition);
 		}
 	};
-
-	
 }

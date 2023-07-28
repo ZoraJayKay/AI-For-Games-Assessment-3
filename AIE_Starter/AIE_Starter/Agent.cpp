@@ -7,6 +7,7 @@ namespace AIForGames {
 
 	Agent::~Agent() {
 		delete m_current;
+		m_current = nullptr;
 	};
 
 	std::vector<Node*> Agent::GetPath() {
@@ -23,8 +24,8 @@ namespace AIForGames {
 		}
 	};
 
-	void Agent::Draw(Color colour) {
-		m_pathAgent.Draw(colour);
+	void Agent::Draw() {
+		m_pathAgent.Draw();
 	};
 
 	// A function that finds the nearest node to the given point and calculates a path to it.
@@ -43,6 +44,10 @@ namespace AIForGames {
 		// Assign the Cartesian coordinates of the node passed in as the coordinates of the PathAgent inside this Agent
 		m_pathAgent.SetAgentPosition(glm::vec2(node->position.x, node->position.y));
 	}
+
+	void Agent::SetSpeed(int speed) {
+		m_pathAgent.SetSpeed(speed);
+	};
 
 	void Agent::SetAgent(PathAgent agent) {
 		m_pathAgent = agent;
@@ -68,5 +73,22 @@ namespace AIForGames {
 
 	glm::vec2 Agent::GetPosition() {
 		return m_pathAgent.GetAgentPosition();
+	}
+
+	// A function for resetting this agent's path
+	void Agent::Reset() {
+		m_pathAgent.Reset();
+	};
+
+	void Agent::SetColour(Color colour) {
+		m_pathAgent.SetColour(colour);
+	}
+
+	void Agent::SetStateText(const char* text) {
+		m_pathAgent.SetStateText(text);
+	}
+
+	Color Agent::AgentColour() {
+		return m_pathAgent.GetColour();
 	}
 }

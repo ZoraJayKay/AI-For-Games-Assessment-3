@@ -66,18 +66,17 @@ namespace AIForGames {
 		// A Raylib color object for the shortest path through the ascii maze edge objects (blue)
 		Color passedInColour = colour;
 
-		// For every node with a non-null 'previous' pointer, draw a pathing line between itself and the previous node
-		for (Node* node : path) {
-			Node* other = node->previousNode;
-			if (other != nullptr) {
+		// Draw a pathing line between each node and the one in front, except for the final node
+		if (path.size() > 0) {
+			for (int i = 0; i < path.size()-1; i++) {
 				DrawLine(
-					(int)other->position.x,
-					(int)other->position.y,
-					(int)node->position.x,
-					(int)node->position.y,
+					path[i]->position.x,
+					path[i]->position.y,
+					path[i + 1]->position.x,
+					path[i + 1]->position.y,
 					passedInColour);
-			}			
-		}
+			}
+		}		
 
 		// Debugging / informational printouts to the screen
 #ifndef NDEBUG
@@ -127,7 +126,7 @@ namespace AIForGames {
 							(int)(y * m_cellSize),		// y
 							(int)m_cellSize - 1,		// width (minus 1 pixel to separate blocks)
 							(int)m_cellSize - 1,		// height (minus 1 pixel to separate blocks)
-							cellColour);				// colour
+							GRAY);				// colour
 
 						// Debug print the map coordinates of each empty cell (too visually busy with pathed cells included)
 #ifndef NDEBUG

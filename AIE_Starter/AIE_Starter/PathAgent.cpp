@@ -122,16 +122,11 @@ namespace AIForGames {
 		m_currentIndex = 0;
 	};
 
-	void PathAgent::Draw(Color colour) {
-		Color agentColour;
+	void PathAgent::Draw() {
+		DrawCircle((int)m_position.x, (int)m_position.y, 8, m_agentColour);
 
-		// Purple
-		agentColour.a = 255;
-		agentColour.r = 255;
-		agentColour.g = 0;
-		agentColour.b = 255;
-		
-		DrawCircle((int)m_position.x, (int)m_position.y, 8, colour);
+		// Draw the current behaviour of this agent below its circular shape
+		DrawText(stateText, (int)m_position.x + 5, (int)m_position.y + 10, 4, m_agentColour);
 	};
 
 	void PathAgent::SetAgentCurrentNode(Node* node) {
@@ -146,4 +141,21 @@ namespace AIForGames {
 		m_position.x = pos.x;
 		m_position.y = pos.y;
 	};
+
+	// A function to reset the currentpath
+	void PathAgent::Reset() {
+		m_path.clear();
+	}
+
+	void PathAgent::SetColour(Color colour) {
+		m_agentColour = colour;
+	}
+
+	void PathAgent::SetStateText(const char* text) {
+		stateText = text;
+	}
+
+	Color PathAgent::GetColour() {
+		return m_agentColour;
+	}
 }

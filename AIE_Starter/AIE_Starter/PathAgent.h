@@ -13,6 +13,8 @@ namespace AIForGames {
 		int m_currentIndex;
 		Node* m_currentNode;
 		float m_speed;
+		Color m_agentColour;
+		const char* stateText;
 
 	public:
 		PathAgent();
@@ -23,9 +25,14 @@ namespace AIForGames {
 		void SetSpeed(int spd);
 		void Update(float deltaTime);
 		void GoToNode(Node* node);
-		void Draw(Color colour);
+		/*void Draw(Color colour);*/
+		void Draw();
 		glm::vec2 GetAgentPosition();
 		void SetAgentPosition(glm::vec2 pos);
 		void SetAgentCurrentNode(Node* node);
+		void Reset();
+		void SetColour(Color colour);
+		void SetStateText(const char* text);
+		Color GetColour();
 	};
 }

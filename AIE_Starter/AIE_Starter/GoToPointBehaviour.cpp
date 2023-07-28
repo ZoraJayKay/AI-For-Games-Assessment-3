@@ -8,7 +8,7 @@ namespace AIForGames {
 	GoToPointBehaviour::GoToPointBehaviour() {};
 	GoToPointBehaviour::~GoToPointBehaviour() {};
 
-	// An Update function that reads the mouse and sets the PathAgent moving, copied from main.cpp
+	// An Update function that reads the mouse and sets the PathAgent moving
 	void GoToPointBehaviour::Update(Agent* agent, float deltaTime) {
 		if (IsMouseButtonPressed(0)) {
 			Vector2 mousePos = GetMousePosition();

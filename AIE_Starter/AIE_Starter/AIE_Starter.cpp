@@ -19,20 +19,6 @@
 *
 ********************************************************************************************/
 
-
-/*
-AIE Pathfinding tutorial #1
-In this tutorial series we’ll look at creating an implementation of Djikstra’s Shortest Path algorithm.
-
-There are three tutorials:
-
-Creating a Node Graph
-Calculating a Path
-Creating a Pathing Agent
-
-*/
-
-
 #include "raylib.h"
 
 #define RAYGUI_IMPLEMENTATION
@@ -40,7 +26,7 @@ Creating a Pathing Agent
 #include "raygui.h"
 #include "Pathfinding.h"
 #include <string>;
-//#include "memory.h"
+#include "memory.h"
 #include "NodeMap.h"
 #include <iostream>
 #include "Agent.h"
@@ -48,6 +34,7 @@ Creating a Pathing Agent
 #include "GoToPointBehaviour.h"
 #include "WanderBehaviour.h"
 #include "FollowBehaviour.h"
+#include "SelectorBehaviour.h"
 
 using namespace std;
 using namespace AIForGames;
@@ -56,7 +43,7 @@ int main(int argc, char* argv[])
 {
 	// Initialization
 	//--------------------------------------------------------------------------------------
-	int screenWidth = 1200;
+	int screenWidth = 1500;
 	int screenHeight = 900;
 
 	InitWindow(screenWidth, screenHeight, "Zora Jane Kerr: Artificial Intelligence for Games (Assessment 1 - Implement the A* Pathfinding Algorithm) AIE, 2023 (student year 1)");
@@ -70,22 +57,24 @@ int main(int argc, char* argv[])
 	
 	vector<string> asciiMap;
 
-	// 25x15 grid of chars denoting whether or not a cell is navigable (1) or impassable (0) /// ALTERNATE MAP
-	asciiMap.push_back("00000000000000000000");     // row 1
-	asciiMap.push_back("01011101110000111000");     // row 2
-	asciiMap.push_back("01010111011111101100");     // row 3
-	asciiMap.push_back("01010000000010100110");     // row 4
-	asciiMap.push_back("01011111111011110010");     // row 5
-	asciiMap.push_back("01000000100010011110");     // row 6
-	asciiMap.push_back("01111100001110010010");     // row 7
-	asciiMap.push_back("00000111111000010000");     // row 8
-	asciiMap.push_back("01111101001111111110");     // row 9
-	asciiMap.push_back("01000111001000101110");     // row 10
-	asciiMap.push_back("01000101001000101010");     // row 10
-	asciiMap.push_back("01111101111111100110");     // row 10
-	asciiMap.push_back("00101000100000100010");     // row 10
-	asciiMap.push_back("00111111100000111110");     // row 10
-	asciiMap.push_back("00000000000000000000");     // row 10
+	// 25x17 grid of chars denoting whether or not a cell is navigable (1) or impassable (0) /// ALTERNATE MAP
+	asciiMap.push_back("0000000000000000000000000");     // row 1
+	asciiMap.push_back("0101110111000011100111100");     // row 2
+	asciiMap.push_back("0101011101111110111100110");     // row 3
+	asciiMap.push_back("0101000000001010011000010");     // row 4
+	asciiMap.push_back("0101111111101111001011110");     // row 5
+	asciiMap.push_back("0100000010001001111010000");     // row 6
+	asciiMap.push_back("0111110000111001001011110");     // row 7
+	asciiMap.push_back("0000011111100001000010010");     // row 8
+	asciiMap.push_back("0111110100111111111011110");     // row 9
+	asciiMap.push_back("0100011100100010111010100");     // row 10
+	asciiMap.push_back("0100010100100010101010110");     // row 11
+	asciiMap.push_back("0111110111111110111010100");     // row 12
+	asciiMap.push_back("0010100010000010001011100");     // row 13
+	asciiMap.push_back("0111111110111011111110110");     // row 14
+	asciiMap.push_back("0100000000101001000000010");     // row 15
+	asciiMap.push_back("0111111111111111111111110");     // row 16
+	asciiMap.push_back("0000000000000000000000000");     // row 17
 
 	// Create a NodeMap class with a width, height and cell size, ie the spacing in pixels between consecutive squares in the grid. We’ll give it a function to initialize its data from the ASCII map declared above.
 	NodeMap* map = new NodeMap();
@@ -96,26 +85,38 @@ int main(int argc, char* argv[])
 	Node* start = map->GetNode(1, 1);
 
 	// Create a new player agent behaviour with the existing node map and the 'point and click' behaviour
-	Agent player_behaviour(map, new GoToPointBehaviour());
 	PathAgent playerAgent;
-	playerAgent.SetSpeed(64);
+	Agent player_behaviour(map, new GoToPointBehaviour());
 	player_behaviour.SetAgent(playerAgent);
+	player_behaviour.SetStateText("Player");
+	player_behaviour.SetColour(YELLOW);
+	player_behaviour.SetSpeed(64);
 	player_behaviour.SetNode(start);
 	
 	// An agent for wandering the map randomly
-	Agent agent_behaviour_01(map, new WanderBehaviour());
 	PathAgent wanderingAgent;
-	wanderingAgent.SetSpeed(32);
+	Agent agent_behaviour_01(map, new WanderBehaviour());
 	agent_behaviour_01.SetAgent(wanderingAgent);
+	agent_behaviour_01.SetColour(DARKGREEN);
+	agent_behaviour_01.SetSpeed(64);
 	agent_behaviour_01.SetNode(map->GetRandomNode());
 
 	// An agent for following the player
-	Agent agent_behaviour_02(map, new FollowBehaviour());
 	PathAgent followingAgent;
-	followingAgent.SetSpeed(48);
+	Agent agent_behaviour_02(map, new FollowBehaviour());	
 	agent_behaviour_02.SetAgent(followingAgent);
+	agent_behaviour_02.SetColour(BLUE);
+	agent_behaviour_02.SetSpeed(48);
 	agent_behaviour_02.SetTarget(&player_behaviour);
 	agent_behaviour_02.SetNode(map->GetRandomNode());
+
+	// An agent that switches its behaviour subject to proximity with the player
+	PathAgent statechangeAgent;
+	Agent agent_03(map, new SelectorBehaviour(new FollowBehaviour(), new WanderBehaviour()));
+	agent_03.SetAgent(statechangeAgent);
+	agent_03.SetSpeed(32);
+	agent_03.SetNode(map->GetRandomNode());
+	agent_03.SetTarget(&player_behaviour);
 
 	// Time at commencement of pathfinding
 	float time = (float)GetTime();
@@ -143,19 +144,22 @@ int main(int argc, char* argv[])
 		map->Draw();
 
 		// Draw a line that shows the current path of the PathAgent inside the Agent that is passed in
-		map->DrawPath(player_behaviour.GetPath(), DARKPURPLE);
+		map->DrawPath(player_behaviour.GetPath(), YELLOW);
 		map->DrawPath(agent_behaviour_01.GetPath(), DARKGREEN);
 		map->DrawPath(agent_behaviour_02.GetPath(), DARKBLUE);
+		map->DrawPath(agent_03.GetPath(), agent_03.AgentColour());
 
 		// Update the behaviour of the Agent that encapsulates the PathAgent
 		player_behaviour.Update(deltaTime);
 		agent_behaviour_01.Update(deltaTime);
 		agent_behaviour_02.Update(deltaTime);
+		agent_03.Update(deltaTime);
 
-		// Draw the path of the PathAgent inside the Agent
-		player_behaviour.Draw(PURPLE);
-		agent_behaviour_01.Draw(GREEN);
-		agent_behaviour_02.Draw(BLUE);
+		// Draw the PathAgent inside of the Agent
+		player_behaviour.Draw();
+		agent_behaviour_01.Draw();
+		agent_behaviour_02.Draw();
+		agent_03.Draw();
 
 		// Finish
 		EndDrawing();
