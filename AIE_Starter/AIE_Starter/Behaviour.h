@@ -10,5 +10,8 @@ namespace AIForGames {
 	public:
 		// This pure virtual function is a null pointer to a function (=0) so it cannot implement a new Update within the Behaviour class. Derived classes (other Behaviours) can override this function, and we can create instances of them because they make the function a non-null pointer.
 		virtual void Update(Agent* agent, float deltaTime) = 0;
+
+		// Improvised function for when the destructor doesn't call because I'm using an Agent object rather than an Agent* - ONLY USED FOR SelectorBehaviour
+		virtual void DestroyPointers() = 0;
 	};
 }

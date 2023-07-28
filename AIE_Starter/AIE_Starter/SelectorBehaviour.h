@@ -21,6 +21,9 @@ namespace AIForGames {
 		virtual void Update(Agent* agent, float deltaTime);
 
 		void SetBehaviour(Behaviour* bhv, Agent* agent);
+
+		// Improvised function for when the destructor doesn't call because I'm using an Agent object rather than an Agent*
+		virtual void DestroyPointers();
 	};
 }
 

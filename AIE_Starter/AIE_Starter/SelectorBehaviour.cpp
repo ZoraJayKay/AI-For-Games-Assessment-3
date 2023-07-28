@@ -8,6 +8,7 @@ namespace AIForGames {
 	// Overloaded constructor wherein the passed-in parameters are set as the two Behaviour pointers
 	SelectorBehaviour::SelectorBehaviour(Behaviour* b1, Behaviour* b2) : m_b1(b1), m_b2(b2) {};
 
+	// Destructor isn't triggering, presumably because I'm using SelectorBehaviour not as a pointer...?
 	SelectorBehaviour::~SelectorBehaviour() {
 		// b1 and b2 will have memory allocated to them in the main program so they need deleting before the program exits. m_currentBehaviour is a reference and not allocated memory at any point.
 		delete m_b1;
@@ -51,4 +52,13 @@ namespace AIForGames {
 			agent->Reset();
 		}
 	};
+
+	// Improvised function for when the destructor doesn't call because I'm using an Agent object rather than an Agent*
+	void SelectorBehaviour::DestroyPointers() {
+		delete this->m_b1;
+		this->m_b1 = nullptr;
+
+		delete this->m_b2;
+		this->m_b2 = nullptr;
+	}
 }

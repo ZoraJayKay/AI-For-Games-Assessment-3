@@ -216,6 +216,8 @@ int main(int argc, char* argv[])
 	CloseWindow();        // Close window and OpenGL context
 	//--------------------------------------------------------------------------------------
 
+	agent_03.GetBehaviour()->DestroyPointers();
+
 	delete map;
 	map = nullptr;	
 

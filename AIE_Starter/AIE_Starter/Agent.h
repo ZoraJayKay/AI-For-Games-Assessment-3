@@ -33,6 +33,8 @@ namespace AIForGames {
 		void SetColour(Color colour);
 		void SetStateText(const char* text);
 		Color AgentColour();
+		PathAgent GetAgent();
+		Behaviour* GetBehaviour();
 
 	private:
 		PathAgent m_pathAgent;

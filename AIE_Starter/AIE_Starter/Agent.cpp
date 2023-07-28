@@ -67,6 +67,14 @@ namespace AIForGames {
 		return m_targetAgent;
 	}
 
+	Behaviour* Agent::GetBehaviour() {
+		return m_current;
+	};
+
+	PathAgent Agent::GetAgent() {
+		return m_pathAgent;
+	}
+
 	void Agent::SetTarget(Agent* agent) {
 		m_targetAgent = agent;
 	}
