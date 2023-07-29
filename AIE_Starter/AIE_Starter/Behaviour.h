@@ -13,5 +13,11 @@ namespace AIForGames {
 
 		// Improvised function for when the destructor doesn't call because I'm using an Agent object rather than an Agent* - ONLY USED FOR SelectorBehaviour
 		virtual void DestroyPointers() = 0;
+
+		// A function for when the Behaviour becomes active (not PURE virtual because not all Behaviours require specific functionality here)
+		virtual void Enter() {};
+
+		// A function for when the Behaviour ceases being active (not PURE virtual because not all Behaviours require specific functionality here)
+		virtual void Exit() {};
 	};
 }

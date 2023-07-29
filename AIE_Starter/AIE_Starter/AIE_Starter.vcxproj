@@ -142,13 +142,15 @@
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="AIE_Starter.cpp" />
     <ClCompile Include="Behaviour.cpp" />
+    <ClCompile Include="Condition.cpp" />
+    <ClCompile Include="FiniteStateMachine.cpp" />
     <ClCompile Include="FollowBehaviour.cpp" />
     <ClCompile Include="GoToPointBehaviour.cpp" />
     <ClCompile Include="NodeMap.cpp" />
     <ClCompile Include="PathAgent.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
-    <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="SelectorBehaviour.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Transition.cpp" />
     <ClCompile Include="WanderBehaviour.cpp" />
   </ItemGroup>
