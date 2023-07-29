@@ -1,5 +1,4 @@
 #include "NodeMap.h"
-//#include "raylib.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -80,7 +79,7 @@ namespace AIForGames {
 
 		// Debugging / informational printouts to the screen
 #ifndef NDEBUG
-		string noPath = "No path from start to end";
+		/*string noPath = "No path from start to end";
 		string numberOfNodes = to_string(path.size());
 		string numNodes = "Number of nodes in the path: " + numberOfNodes;
 
@@ -92,7 +91,7 @@ namespace AIForGames {
 		else {
 			const char* nNodes = numNodes.c_str();
 			DrawText(nNodes, 50, AIForGames::sizeOfCell * 10.5, 15, WHITE);
-		}	
+		}*/
 #endif
 	};
 
@@ -153,7 +152,7 @@ namespace AIForGames {
 								lineColour);				// colour
 
 #ifndef NDEBUG
-							int cellGCost = node->gScore;
+							/*int cellGCost = node->gScore;
 							string cellCost = to_string(cellGCost);
 							string cellString = "g: (" + cellCost + ")";
 							const char* gCost = cellString.c_str();
@@ -161,7 +160,7 @@ namespace AIForGames {
 							int cellHCost = node->hScore;
 							string stringHCost = to_string(cellHCost);
 							string hCost = "h: (" + stringHCost + ")";
-							const char* hCostChar = hCost.c_str();
+							const char* hCostChar = hCost.c_str();*/
 
 							int cellFCost = node->fScore;
 							string stringFCost = to_string(cellFCost);
@@ -183,15 +182,35 @@ namespace AIForGames {
 								clr = WHITE;
 							}
 
-							DrawText(gCost, (x * m_cellSize) + 2, (y * m_cellSize) + 1, 0.5, clr);
-							DrawText(hCostChar, (x * m_cellSize) + 2, (y * m_cellSize) + 16, 0.5, clr);
-							DrawText(fCostChar, (x * m_cellSize) + 2, (y * m_cellSize) + 31, 0.5, clr);
-							
+							/*DrawText(gCost, (x * m_cellSize) + 2, (y * m_cellSize) + 1, 0.5, clr);
+							DrawText(hCostChar, (x * m_cellSize) + 2, (y * m_cellSize) + 16, 0.5, clr);*/
+							DrawText(fCostChar, (x * m_cellSize) + 2, (y * m_cellSize) + 1, 0.5, clr);							
 #endif
 						};
 					};
 				};
 			};
+
+			string player = "Player";
+			string agent_wander = "Wander Behaviour";
+			string agent_follow = "Follow Behaviour";
+			string agent_selector_01 = "Hybrid Behaviour (Patrol) / ";
+			string agent_selector_02 = "(Chasing Player)";
+			string agent_fsm = "FSM Wander & Follow";
+
+			const char* playerPrint = player.c_str();
+			const char* wanderPrint = agent_wander.c_str();
+			const char* followPrint = agent_follow.c_str();
+			const char* selectorPrint_01 = agent_selector_01.c_str();
+			const char* selectorPrint_02 = agent_selector_02.c_str();
+			const char* fsmPrint = agent_fsm.c_str();
+
+			DrawText(playerPrint, 25, (m_cellSize * 18) + 2, 5, YELLOW);
+			DrawText(wanderPrint, 25, (m_cellSize * 18.5) + 2, 5, DARKGREEN);
+			DrawText(followPrint, 25, (m_cellSize * 19) + 2, 5, BLUE);
+			DrawText(selectorPrint_01, 25, (m_cellSize * 19.5) + 2, 5, GREEN);
+			DrawText(selectorPrint_02, 175, (m_cellSize * 19.5) + 2, 5, RED);
+			DrawText(fsmPrint, 25, (m_cellSize * 20) + 2, 5, PURPLE);
 	};
 
 	void NodeMap::Initialise(std::vector<std::string> asciiMap, int cellSize) {

@@ -6,7 +6,7 @@
 
 // Use the same namespace as the one set up by the tutorial
 namespace AIForGames {
-	static int sizeOfCell = 50;
+	static int sizeOfCell = 40;
 
 	// Create a new class within the namespace to hold the map of nodes
 	class NodeMap

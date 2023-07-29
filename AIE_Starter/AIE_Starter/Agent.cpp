@@ -3,7 +3,9 @@
 namespace AIForGames {
 	Agent::Agent() {};
 
-	Agent::Agent(NodeMap* _nodeMap, Behaviour* _behaviour) : m_current(_behaviour), m_nodeMap(_nodeMap), m_colour({ 255, 255, 0, 255 }) {};
+	Agent::Agent(NodeMap* _nodeMap, Behaviour* _behaviour) : m_current(_behaviour), m_nodeMap(_nodeMap), m_colour({ 255, 255, 0, 255 }) {
+		_behaviour->Enter(this);
+	};
 
 	Agent::~Agent() {
 		delete m_current;

@@ -6,10 +6,13 @@
 namespace AIForGames {
 	class Behaviour;
 	class Condition;
+	class Agent;
 
 	class State {
 	public:
 		State();
+		State(Behaviour* behaviour);
+
 		~State();
 
 		// Each State must have one or more Transitions (ways to activate / access / navigate to that State)
@@ -26,6 +29,7 @@ namespace AIForGames {
 		virtual void Enter(Agent* agent);
 		virtual void Exit(Agent* agent);
 		std::vector<Transition> GetTransitions();
+		void AddTransition(Condition* transitionCondition, State* state);
 
 	private:
 		// A vector of Behaviour pointers (the base, abstract class) so that the collection can polymorphically hold its various derived classes of specific behaviours. The State owns these behaviours.

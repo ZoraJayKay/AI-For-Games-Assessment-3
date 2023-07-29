@@ -15,7 +15,7 @@ namespace AIForGames {
 		virtual void DestroyPointers() = 0;
 
 		// A function for when the Behaviour becomes active (not PURE virtual because not all Behaviours require specific functionality here)
-		virtual void Enter() {};
+		virtual void Enter(Agent* agent) {};
 
 		// A function for when the Behaviour ceases being active (not PURE virtual because not all Behaviours require specific functionality here)
 		virtual void Exit() {};

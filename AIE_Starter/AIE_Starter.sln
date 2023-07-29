@@ -5,6 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AIE_Starter", "AIE_Starter\AIE_Starter.vcxproj", "{35C65E10-EED3-4687-9E88-2E1D54BCB977}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1B01D10-DB05-49BE-B186-388E4F29EC3F}"
+	ProjectSection(SolutionItems) = preProject
+		packages\raylib.4.5.0\build\native\include\raylib.h = packages\raylib.4.5.0\build\native\include\raylib.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

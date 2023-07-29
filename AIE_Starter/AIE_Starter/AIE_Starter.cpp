@@ -20,10 +20,8 @@
 ********************************************************************************************/
 
 #include "raylib.h"
-
 #define RAYGUI_IMPLEMENTATION
 #define RAYGUI_SUPPORT_ICONS
-#include "raygui.h"
 #include "Pathfinding.h"
 #include <string>;
 #include "memory.h"
@@ -35,6 +33,9 @@
 #include "WanderBehaviour.h"
 #include "FollowBehaviour.h"
 #include "SelectorBehaviour.h"
+#include "DistanceCondition.h"
+#include "State.h"
+#include "FiniteStateMachine.h"
 
 using namespace std;
 using namespace AIForGames;
@@ -78,45 +79,66 @@ int main(int argc, char* argv[])
 
 	// Create a NodeMap class with a width, height and cell size, ie the spacing in pixels between consecutive squares in the grid. We’ll give it a function to initialize its data from the ASCII map declared above.
 	NodeMap* map = new NodeMap();
-	
 	map->Initialise(asciiMap, AIForGames::sizeOfCell);
 
 	// Set the starting node for the A* search equal to the Node* in column index 1, row index 1 (in the ascii map)
 	Node* start = map->GetNode(1, 1);
 
+	// ******************************************
+	// Set up a Finite State Machine, having two states each with their own condition for activation
+	// Define a DistanceCondition which will be satisfied if two agents are closer than 5 cells
+	DistanceCondition* closerThan5 = new DistanceCondition(5.0f * AIForGames::sizeOfCell, true);
+
+	// Define a DistanceCondition which will be satisfied if two agents are further apart than 7 cells
+	DistanceCondition* fartherThan7 = new DistanceCondition(7.0f * AIForGames::sizeOfCell, true);
+
+	// Incorporate these states into the FSM
+	// 1: Add Behaviours to the States
+	State* wanderState = new State(new WanderBehaviour());
+	State* followState = new State(new FollowBehaviour());
+	// 2: Add Transitions to the States, including the Transition Condition for transitioning from one Behaviour to the other
+	wanderState->AddTransition(closerThan5, followState);
+	followState->AddTransition(fartherThan7, wanderState);
+
+	// Create the FSM itself with a default position of wandering
+	FiniteStateMachine* fsm = new FiniteStateMachine(wanderState);
+	fsm->AddState(wanderState);
+	fsm->AddState(followState);
+
+	// ******************************************
+
 	// Create a new player agent behaviour with the existing node map and the 'point and click' behaviour
-	PathAgent playerAgent;
-	Agent player_behaviour(map, new GoToPointBehaviour());
-	player_behaviour.SetAgent(playerAgent);
-	player_behaviour.SetStateText("Player");
-	player_behaviour.SetColour(YELLOW);
-	player_behaviour.SetSpeed(64);
-	player_behaviour.SetNode(start);
+	Agent player(map, new GoToPointBehaviour());
+	player.SetStateText("Player");
+	player.SetColour(YELLOW);
+	player.SetSpeed(64);
+	player.SetNode(start);
 	
 	// An agent for wandering the map randomly
-	PathAgent wanderingAgent;
 	Agent agent_behaviour_01(map, new WanderBehaviour());
-	agent_behaviour_01.SetAgent(wanderingAgent);
 	agent_behaviour_01.SetColour(DARKGREEN);
 	agent_behaviour_01.SetSpeed(64);
 	agent_behaviour_01.SetNode(map->GetRandomNode());
 
 	// An agent for following the player
-	PathAgent followingAgent;
 	Agent agent_behaviour_02(map, new FollowBehaviour());	
-	agent_behaviour_02.SetAgent(followingAgent);
 	agent_behaviour_02.SetColour(BLUE);
 	agent_behaviour_02.SetSpeed(48);
-	agent_behaviour_02.SetTarget(&player_behaviour);
+	agent_behaviour_02.SetTarget(&player);
 	agent_behaviour_02.SetNode(map->GetRandomNode());
 
 	// An agent that switches its behaviour subject to proximity with the player
-	PathAgent statechangeAgent;
 	Agent agent_03(map, new SelectorBehaviour(new FollowBehaviour(), new WanderBehaviour()));
-	agent_03.SetAgent(statechangeAgent);
 	agent_03.SetSpeed(32);
 	agent_03.SetNode(map->GetRandomNode());
-	agent_03.SetTarget(&player_behaviour);
+	agent_03.SetTarget(&player);
+
+	// An agent whose behaviour is controlled by the FSM
+	Agent agent_04(map, fsm);
+	agent_04.SetNode(map->GetRandomNode());
+	agent_04.SetColour(PURPLE);
+	agent_04.SetSpeed(32);
+	agent_04.SetTarget(&player);
 
 	// Time at commencement of pathfinding
 	float time = (float)GetTime();
@@ -144,22 +166,25 @@ int main(int argc, char* argv[])
 		map->Draw();
 
 		// Draw a line that shows the current path of the PathAgent inside the Agent that is passed in
-		map->DrawPath(player_behaviour.GetPath(), YELLOW);
+		map->DrawPath(player.GetPath(), YELLOW);
 		map->DrawPath(agent_behaviour_01.GetPath(), DARKGREEN);
 		map->DrawPath(agent_behaviour_02.GetPath(), DARKBLUE);
 		map->DrawPath(agent_03.GetPath(), agent_03.AgentColour());
+		map->DrawPath(agent_04.GetPath(), agent_04.AgentColour());
 
 		// Update the behaviour of the Agent that encapsulates the PathAgent
-		player_behaviour.Update(deltaTime);
+		player.Update(deltaTime);
 		agent_behaviour_01.Update(deltaTime);
 		agent_behaviour_02.Update(deltaTime);
 		agent_03.Update(deltaTime);
+		agent_04.Update(deltaTime);
 
 		// Draw the PathAgent inside of the Agent
-		player_behaviour.Draw();
+		player.Draw();
 		agent_behaviour_01.Draw();
 		agent_behaviour_02.Draw();
 		agent_03.Draw();
+		agent_04.Draw();
 
 		// Finish
 		EndDrawing();
@@ -217,6 +242,9 @@ int main(int argc, char* argv[])
 	//--------------------------------------------------------------------------------------
 
 	agent_03.GetBehaviour()->DestroyPointers();
+
+	delete fsm;
+	fsm = nullptr;
 
 	delete map;
 	map = nullptr;	

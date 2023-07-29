@@ -9,8 +9,8 @@ namespace AIForGames {
 		// Retrieve the target agent
 		Agent* target = agent->GetTarget();
 
-		// Check the distance between the target agent's current position and the last position we pathed to
-		float distance = glm::distance(target->GetPosition(), lastTargetPosition);
+		// Check the distance between our position and the target agent's current position
+		float distance = glm::distance(agent->GetPosition(), target->GetPosition());
 
 		// If the distance differs by more than one node, re-calculate the path
 		if (distance > AIForGames::sizeOfCell) {
